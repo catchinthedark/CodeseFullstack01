@@ -57,28 +57,28 @@ INSERT INTO dangky VALUES ('m6', '20142012', 10);
 INSERT INTO dangky VALUES ('m7', '20142014', 6);
 INSERT INTO dangky VALUES ('m7', '20142012', 2);
 
--- a
+-- a Đưa ra tên của các môn học
 SELECT DISTINCT `tenmh`
 FROM `monhoc`;
 
--- b
+-- b Đưa ra MS, Họtên, Ngày sinh của các sinh viên ở Hà nội
 SELECT `mssv`, `hoten`, `ngaysinh`
 FROM `sinhvien`
 WHERE `quequan` = 'ha noi';
 
--- c
+-- c Đưa ra mã số của các sinh viên đăng ký học môn học có mã số M1 hoặc M2
 SELECT DISTINCT `mssv`
 FROM `dangky`
 WHERE `msmh` = 'm1' OR `msmh` = 'm2';
 
--- d
+-- d Đưa ra tên của môn học mà sinh viên có mã số 20042325 học
 SELECT `tenmh`
 FROM
 	`monhoc` AS mh
     INNER JOIN `dangky` AS dk ON dk.`msmh` = mh.`msmh`
 WHERE `mssv` = '20042325';
 
--- e
+-- e Đưa ra tên của các sinh viên đăng ký học ít nhất một môn do giảng viên Lê Quân dạy
 SELECT DISTINCT
 	sv.`hoten`
 FROM
@@ -87,7 +87,7 @@ FROM
     INNER JOIN `monhoc` AS mh ON dk.`msmh` = mh.`msmh`
 WHERE mh.`tengv` = 'Le Quan';
 
--- f
+-- f Đưa ra tên các môn mà sinh viên Nguyễn Văn A học và điểm tương ứng của các môn đó cho sinh viên này
 SELECT DISTINCT
 	mh.`tenmh`, dk.`diem`
 FROM
@@ -96,7 +96,7 @@ FROM
     INNER JOIN `monhoc` AS mh ON dk.`msmh` = mh.`msmh`
 WHERE sv.`hoten` = 'Nguyen Van A';
 
--- g
+-- g Đưa ra mã số của các sinh viên học tất cả các môn mà giảng viên Lê Quân có dạy
 SELECT `mssv`
 FROM
 	(SELECT DISTINCT
@@ -120,20 +120,20 @@ HAVING COUNT(`mssv`) = (SELECT COUNT(*)
 								INNER JOIN `monhoc` AS mh ON  dk.`msmh` = mh.`msmh`
 							WHERE mh.`tengv` = 'Le Quan') AS T3);
                             
--- h
+-- h Đưa ra tên của các môn học không được sinh viên nào đăng ký học
 SELECT `tenmh`
 FROM `monhoc`
 WHERE `msmh` NOT IN (SELECT DISTINCT `msmh`
 					FROM `dangky`);
                     
--- i
+-- i Những sinh viên nào có đăng ký học từ 5 môn trở lên
 SELECT `mssv`
 FROM (SELECT `mssv`, COUNT(*) AS Somh
 	FROM `dangky`
 	GROUP BY `mssv`) AS T
 WHERE Somh >= 5;
 
--- j
+-- j Điểm trung bình của sinh viên Nguyễn Văn A là bao nhiêu?
 SELECT DISTINCT
 	AVG(dk.`diem`)
 FROM
@@ -142,7 +142,7 @@ FROM
     INNER JOIN `monhoc` AS mh ON dk.`msmh` = mh.`msmh`
 WHERE sv.`hoten` = 'Nguyen Van A';
 
--- k
+-- k Sinh viên nào đạt điểm cao nhất cho môn CSDL?
 SELECT MAX(`diem`)
 FROM (SELECT `diem`
 	FROM 

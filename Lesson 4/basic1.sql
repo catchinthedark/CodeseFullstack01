@@ -40,6 +40,7 @@ insert into `contract` values ('01', '02', "2020-10-01", "2020-12-01");
 insert into `contract` values ('03', '03', "2020-01-01", "2020-06-01");
 insert into `contract` values ('03', '02', "2020-07-01", "2020-09-01");
 
+-- Đưa ra danh sách (Địachỉ, Tênchủnhà) của những ngôi nhà có giá thuê ít hơn 10 triệu.
 SELECT 
     `address`, `owner`
 FROM
@@ -47,6 +48,7 @@ FROM
 WHERE
     `price` < 10000000;
     
+-- Đưa ra danh sách (MãKH, Họtên, Cơquan) của những người đã từng thuê nhà của chủ nhà có tên là "Nông Văn Dền"    
 SELECT 
     cl.`clientId`, cl.`name`, cl.`workplace`
 FROM
@@ -57,7 +59,8 @@ WHERE
     c.`clientId` = cl.`clientId`
         AND c.`houseId` = h.`houseId`
         AND h.`owner` = 'Nông Văn Dền';
-        
+    
+-- Đưa ra danh sách các ngôi nhà chưa từng được ai thuê
 SELECT 
     *
 FROM
@@ -70,6 +73,7 @@ WHERE
         WHERE
             c.`houseId` = h.`houseId`);
 
+-- Đưa ra giá thuê cao nhất trong số các giá thuê của các ngôi nhà đã từng ít nhất một lần được thuê.
 SELECT 
     MAX(`price`)
 FROM

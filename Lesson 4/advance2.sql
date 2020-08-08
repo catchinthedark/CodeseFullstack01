@@ -63,7 +63,7 @@ CREATE TABLE Lamviec (
  insert into Lamviec values('NV11', 'P08', '2016-02-12');
  insert into Lamviec values('NV12', 'P08', '2016-02-12');
  
- -- a
+ -- a  Đưa ra tên và tuổi của các nhân viên làm việc cho cả phòng Tổ chức và Kế hoạch
 SELECT DISTINCT
     nv.`Hoten`, nv.`tuoi`
 FROM
@@ -92,7 +92,7 @@ WHERE
         WHERE
             p.`Tenphong` = 'Phongkehoach');
             
--- b
+-- b Với mỗi phòng với trên 20 nhân viên, hãy đưa ra mã số phong và số nhân viên làm trong phòng đó
 SELECT DISTINCT 
 	T1.`MSP`, COUNT(T1.`MSP`) AS Sonhanvien
 FROM 
@@ -104,7 +104,7 @@ FROM
 GROUP BY `MSP`
 HAVING COUNT(T1.`MSP`) > 20;
 
--- c
+-- c Đưa ra tên của các nhân viên mà lương của họ cao hơn cả ngân quỹ của tất cả các phòng mà nhân viên đó làm việc
 SELECT DISTINCT
 	nv.`Hoten`
 FROM
@@ -125,7 +125,7 @@ WHERE
 						ORDER BY nv.`MSNV`) AS T2
 				WHERE T2.`MSNV` = nv.`MSNV`);
                 
--- d
+-- d Đưa ra mã số trưởng phòng của những người trưởng phòng mà các phòng họ quản lý đều có ngân quỹ > 1,000,000
 SELECT DISTINCT
 	`MSTP`
 FROM 
@@ -139,7 +139,7 @@ WHERE
 	GROUP BY p.`MSTP`
     ) > 1000000;
     
--- e
+-- e Đưa ra tên của người trưởng phòng mà phòng đó có ngân quỹ lớn nhất
 SELECT 
 	nv.`Hoten`
 FROM
@@ -149,7 +149,9 @@ WHERE
 	`Nganquy` = (SELECT MAX(`Nganquy`)
 				FROM `Phong`);
 
--- f
+-- f Nếu một người có thể quản lý nhiều phòng, người đó có quyền kiểm soát ngân quỹ
+-- của tất cả các phògn đó. Hãy đưa ra mã số của người trưởng phòng mà tổng số
+-- ngân quỹ được kiểm soát bởi người đó > 5,000,000
 SELECT	
 	`MSTP`
 FROM

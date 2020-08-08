@@ -58,6 +58,7 @@ insert into `roomBooking` values ('01', '03', "2020-07-01", "2020-07-05", 202);
 insert into `roomBooking` values ('01', '04', "2020-08-01", "2020-08-20", 102);
 insert into `roomBooking` values ('01', '05', "2020-07-24", "2020-09-01", 101);
 
+-- Đưa ra danh sách Giá và LoạiP của tất cả các phòng của khách sạn Melia.
 SELECT 
     `price`, `type`
 FROM
@@ -67,6 +68,7 @@ WHERE
     r.`hotelId` = h.`hotelId`
         AND `name` = 'Melia';
     
+-- Liệt kê tất cả các khách đang ở khách sạn Melia.
 SELECT 
     c.*
 FROM
@@ -80,6 +82,7 @@ WHERE
         AND `startDate` <= CURRENT_DATE()
         AND `endDate` >= CURRENT_DATE();
 
+-- Liệt kê tất cả các phòng tại khách sạn Melia và (tên khách đang ở phòng đó nếu phòng đó có người ở).
 (SELECT 
     r.*, c.`name`
 FROM
@@ -116,6 +119,7 @@ WHERE
                 AND `startDate` <= CURRENT_DATE()
                 AND `endDate` >= CURRENT_DATE()));
 
+-- Liệt kê các phòng chưa có người ở tại khách sạn Melia từ trước đến nay.
 SELECT 
     r.*
 FROM
@@ -131,6 +135,7 @@ WHERE
         WHERE
             rB.`roomNumber` = r.`roomNumber`);
 
+-- Hãy cho biết tổng số phòng của mỗi khách sạn tại London.
 SELECT 
     `name`, COUNT(r.`roomNumber`)
 FROM
@@ -141,6 +146,7 @@ WHERE
         AND h.`address` = 'London'
 GROUP BY `name`;
         
+-- Tăng đơn giá của tất cả các phòng đơn lên thêm 5%
 UPDATE `room` 
 SET 
     `price` = `price` * 1.05

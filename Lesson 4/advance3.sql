@@ -65,12 +65,12 @@ insert into Thamgia values('NV002', 'DA0005', 10);
 insert into Thamgia values('NV007', 'DA0005', 10);
 insert into Thamgia values('NV008', 'DA0003', 20);
 
--- a
+-- a Đưa ra tên của các dự án có ngân sách nằm trong khoảng từ 50,000 đến 100,000
 SELECT `TenDA`
 FROM `Duan` 
 WHERE `Ngansach` > 50000 AND `Ngansach` < 100000;
 
--- b
+-- b Đưa ra họ tên của các nhân viên có tham gia làm dự án “Quản lý đào tạo”
 SELECT nv.`Hoten`
 FROM
 	`Thamgia` AS tg
@@ -79,7 +79,7 @@ FROM
 WHERE 
 	da.`TenDA` = 'Quan ly dao tao';
     
--- c
+-- c Đưa ra mã số của các nhân viên tham gia cả hai dự án “Quản lý đào taọ” và “Đào tạo từ xa”
 SELECT DISTINCT
 	tg.`MaNV`
 FROM
@@ -99,7 +99,7 @@ WHERE
                 WHERE
 					da.`TenDA` = 'Dao tao tu xa');
                     
--- d
+-- d Đưa ra mã số của các nhân viên tham gia dự án “Quản lý đào tạo” nhưng không tham gia dự án “Đào tạo từ xa”
 SELECT DISTINCT
 	tg.`MaNV`
 FROM
@@ -119,7 +119,7 @@ WHERE
                 WHERE
 					da.`TenDA` = 'Dao tao tu xa');
                     
--- e
+-- e Đưa ra mã số của phòng không có nhân viên nào tham gia dự án
 SELECT p.`MaP`
 FROM `Phong` AS p
 WHERE
@@ -128,7 +128,7 @@ WHERE
 						`Thamgia` AS tg
                         INNER JOIN `Nhanvien` AS nv ON tg.`MaNV` = nv.`MaNV`);
                 
--- f
+-- f Dự án nào có tất cả các nhân viên của phòng ‘NCKH’ tham gia?
 SELECT da.*
 FROM 
 	(SELECT tg.`MaDA`, p.`MaP`, COUNT(*) AS f
@@ -146,7 +146,7 @@ WHERE
         WHERE
 			p.`MaP` = T.`MaP`);
 
--- g
+-- g Ngân sách trung bình của các dự án mà nhân viên có mã số NV001 tham gia là bao nhiêu?
 SELECT AVG(da.`Ngansach`)
 FROM 
 	`Thamgia` AS tg
@@ -154,7 +154,7 @@ FROM
 WHERE 
 	tg.`MaNV` = 'NV001';
     
--- h
+-- h Có bao nhiêu nhân viên tham gia dự án Quản lý đào tạo?
 SELECT COUNT(*)
 FROM
 	`Thamgia` AS tg
@@ -163,7 +163,7 @@ FROM
 WHERE 
 	da.`TenDA` = 'Quan ly dao tao';
     
--- i
+-- i Hãy đưa ra tên của các dự án mà số nhân viên tham gia dự án đó < 10
 (SELECT da.`TenDA`
 FROM 
 	(SELECT da.`MaDA`, COUNT(*) AS Songuoi
@@ -181,7 +181,7 @@ WHERE da.`MaDA` NOT IN (SELECT DISTINCT tg.`MaDA`
 						FROM `Thamgia` AS tg)
 );
 
--- j
+-- j Dự án nào có số nhân viên tham gia lớn nhất
 SELECT da.*
 FROM 
 	(SELECT da.`MaDA`, COUNT(*) AS f

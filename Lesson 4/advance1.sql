@@ -62,7 +62,7 @@ insert into `supply` values ('06', '08', 80);
 insert into `supply` values ('06', '04', 400);
 insert into `supply` values ('06', '05', 50);
 
--- a
+-- a Đưa ra tên của những hãng có cung ứng ít nhất 1 mặt hàng màu đỏ
 SELECT 
     sr.`name`
 FROM
@@ -75,7 +75,7 @@ WHERE
         AND `color` = 'red'
 GROUP BY sr.`name`;
 
--- b
+-- b Đưa ra mã số của các hãng có cung ứng ít nhất 1 mặt hàng màu đỏ hoặc 1 mặt hàng màu xanh
 SELECT 
     sr.`supplierId`
 FROM
@@ -88,7 +88,7 @@ WHERE
         AND (`color` = 'red' OR `color` = 'green')
 GROUP BY sr.`name`;
 
--- c
+-- c Đưa ra mã số của hãng có cung ứng ít nhất 1 mặt hàng màu đỏ và 1 mặt hàng màu xanh
 SELECT DISTINCT
     `supplierId`
 FROM
@@ -112,7 +112,7 @@ WHERE
                 AND s.`productId` = p.`productId`
                 AND `color` = 'green');
     
--- d
+-- d Đưa ra mã số của hãng cung ứng tất cả các mặt hàng màu đỏ
 SELECT DISTINCT
     T1.`supplierId`
 FROM
@@ -145,7 +145,7 @@ WHERE
             WHERE
                 `color` = 'red'));
         
--- e
+-- e Đưa ra mã số của hãng cung ứng tất cả các mặt hàng màu đỏ và màu xanh
 SELECT DISTINCT
     T1.`supplierId`
 FROM
@@ -196,7 +196,7 @@ WHERE
             WHERE
                 `color` = 'green'));
                 
--- f
+-- f Đưa ra mã số của hãng cung ứng tất cả các mặt hàng màu đỏ hoặc tất cả các mặt hàng màu xanh
 SELECT DISTINCT
     T1.`supplierId`
 FROM
@@ -247,7 +247,7 @@ WHERE
             WHERE
                 `color` = 'green'));
                 
--- g
+-- g Đưa ra cặp mã số của hãng cung ứng sao cho hãng cung ứng tương ứng với mã số thứ nhất cung cấp một mặt hàng nào đó với giá cao hơn so với giá mà hãng tương ứng với mã số thứ hai cung cấp cũng mặt hàng đó
 SELECT DISTINCT
     s1.`supplierId`, s2.`supplierId`
 FROM
@@ -258,7 +258,7 @@ WHERE
         AND s1.`productId` = s2.`productId`
         AND s1.`price` > s2.`price`;
         
--- h
+-- h Đưa ra mã số của mặt hàng được cung cấp bởi ít nhất hai hãng cung ứng
 SELECT DISTINCT
     s1.`productId`
 FROM
@@ -268,17 +268,24 @@ WHERE
     s1.`supplierId` <> s2.`supplierId`
         AND s1.`productId` = s2.`productId`;
         
--- i
+-- i Đưa ra mã số của mặt hàng đắt nhất được cung cấp bởi hãng Dustin
 SELECT 
-    MAX(s.`price`)
+    s.`productId`
 FROM
     `supply` AS s
         INNER JOIN
     `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
 WHERE
-    `name` = 'Dustin';
+    `name` = 'Dustin' 
+    AND `price` = (SELECT MAX(`price`)
+					FROM
+						`supply` AS s
+							INNER JOIN
+						`supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+					WHERE
+						`name` = 'Dustin');
 
--- j
+-- j Đưa ra mã số của mặt hàng được cung ứng bởi tất cả các hãng mà giá tiền đều nhỏ hơn 200
 SELECT  DISTINCT 
 	T1.`productId`
 FROM 
