@@ -59,96 +59,60 @@ insert into `roomBooking` values ('01', '04', "2020-08-01", "2020-08-20", 102);
 insert into `roomBooking` values ('01', '05', "2020-07-24", "2020-09-01", 101);
 
 -- Đưa ra danh sách Giá và LoạiP của tất cả các phòng của khách sạn Melia.
-SELECT 
-    `price`, `type`
-FROM
-    `room` AS r,
-    `hotel` AS h
-WHERE
-    r.`hotelId` = h.`hotelId`
-        AND `name` = 'Melia';
+SELECT `price`, `type`
+FROM `room` AS r
+    INNER JOIN `hotel` AS h ON h.`hotelId` = r.`hotelId`
+WHERE `name` = 'Melia';
     
 -- Liệt kê tất cả các khách đang ở khách sạn Melia.
-SELECT 
-    c.*
-FROM
-    `client` AS c,
-    `roomBooking` AS rB,
-    `hotel` AS h
-WHERE
-    rB.`clientId` = c.`clientId`
-        AND rB.`hotelId` = h.`hotelId`
-        AND h.`name` = 'Melia'
-        AND `startDate` <= CURRENT_DATE()
-        AND `endDate` >= CURRENT_DATE();
+SELECT c.*
+FROM `client` AS c
+    INNER JOIN`roomBooking` AS rB ON rB.`clientId` = c.`clientId`
+    INNER JOIN `hotel` AS h ON h.`hotelId` = rB.`hotelId`
+WHERE h.`name` = 'Melia'
+	AND `startDate` <= CURRENT_DATE()
+	AND `endDate` >= CURRENT_DATE();
 
 -- Liệt kê tất cả các phòng tại khách sạn Melia và (tên khách đang ở phòng đó nếu phòng đó có người ở).
-(SELECT 
-    r.*, c.`name`
-FROM
-    `room` AS r,
-    `client` AS c,
-    `hotel` AS h,
-    `roomBooking` AS rB
-WHERE
-    rB.`clientId` = c.`clientId`
-        AND rB.`hotelId` = h.`hotelId`
-        AND rB.`roomNumber` = r.`roomNumber`
-        AND h.`name` = 'Melia'
-        AND `startDate` <= CURRENT_DATE()
-        AND `endDate` >= CURRENT_DATE()) UNION (SELECT 
-    r.*, NULL
-FROM
-    `room` AS r,
-    `hotel` AS h
-WHERE
-    r.`hotelId` = h.`hotelId`
-        AND `name` = 'Melia'
-        AND `roomNumber` NOT IN (SELECT 
-            r.`roomNumber`
-        FROM
-            `room` AS r,
-            `client` AS c,
-            `hotel` AS h,
-            `roomBooking` AS rB
-        WHERE
-            rB.`clientId` = c.`clientId`
-                AND rB.`hotelId` = h.`hotelId`
-                AND rB.`roomNumber` = r.`roomNumber`
-                AND h.`name` = 'Melia'
-                AND `startDate` <= CURRENT_DATE()
-                AND `endDate` >= CURRENT_DATE()));
+(SELECT r.`roomNumber`, `type`, `price`, c.`name` AS `client`
+FROM `room` AS r
+    INNER JOIN `roomBooking` AS rB ON rB.`roomNumber` = r.`roomNumber`
+    INNER JOIN `client` AS c ON c.`clientId` = rB.`clientId`
+    INNER JOIN `hotel` AS h ON h.`hotelId` = rB.`hotelId`
+WHERE h.`name` = 'Melia'
+	AND `startDate` <= CURRENT_DATE()
+	AND `endDate` >= CURRENT_DATE()
+) UNION (
+SELECT r.`roomNumber`, `type`, `price`, NULL
+FROM `room` AS r
+    INNER JOIN `hotel` AS h ON h.`hotelId` = r.`hotelId`
+WHERE h.`name` = 'Melia'
+    AND `roomNumber` NOT IN (SELECT r.`roomNumber`
+						FROM `room` AS r
+							INNER JOIN `roomBooking` AS rB ON rB.`roomNumber` = r.`roomNumber`
+							INNER JOIN `client` AS c ON c.`clientId` = rB.`clientId`
+							INNER JOIN `hotel` AS h ON h.`hotelId` = rB.`hotelId`
+						WHERE h.`name` = 'Melia'
+							AND `startDate` <= CURRENT_DATE()
+							AND `endDate` >= CURRENT_DATE()));
 
 -- Liệt kê các phòng chưa có người ở tại khách sạn Melia từ trước đến nay.
-SELECT 
-    r.*
-FROM
-    `room` AS r,
-    `hotel` AS h
-WHERE
-    r.`hotelId` = h.`hotelId`
-        AND h.`name` = 'Melia'
-        AND NOT EXISTS( SELECT 
-            *
-        FROM
-            `roomBooking` AS rB
-        WHERE
-            rB.`roomNumber` = r.`roomNumber`);
+SELECT `roomNumber`, `price`, `type`
+FROM `room` AS r
+    INNER JOIN `hotel` AS h ON h.`hotelId` = r.`hotelId`
+WHERE `name` = 'Melia'
+	AND `roomNumber` NOT IN ( SELECT rB.`roomNumber`
+							FROM `roomBooking` AS rB
+							WHERE rB.`roomNumber` = r.`roomNumber`);
 
 -- Hãy cho biết tổng số phòng của mỗi khách sạn tại London.
-SELECT 
-    `name`, COUNT(r.`roomNumber`)
-FROM
-    `room` AS r,
-    `hotel` AS h
-WHERE
-    r.`hotelId` = h.`hotelId`
-        AND h.`address` = 'London'
+SELECT `name`, COUNT(r.`roomNumber`)
+FROM `room` AS r
+    INNER JOIN `hotel` AS h ON h.`hotelId` = r.`hotelId`
+WHERE h.`address` = 'London'
 GROUP BY `name`;
         
 -- Tăng đơn giá của tất cả các phòng đơn lên thêm 5%
 UPDATE `room` 
-SET 
-    `price` = `price` * 1.05
-WHERE
-    `type` = 'single'
+SET `price` = `price` * 1.05
+WHERE `type` = 'single'

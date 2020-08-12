@@ -52,13 +52,11 @@ WHERE
 SELECT 
     cl.`clientId`, cl.`name`, cl.`workplace`
 FROM
-    `client` AS cl,
-    `house` AS h,
-    `contract` AS c
+    `client` AS cl
+    INNER JOIN `contract` AS c ON c.`clientId` = cl.`clientId`
+    INNER JOIN `house` AS h ON h.`houseId` = c.`houseId`
 WHERE
-    c.`clientId` = cl.`clientId`
-        AND c.`houseId` = h.`houseId`
-        AND h.`owner` = 'Nông Văn Dền';
+	h.`owner` = 'Nông Văn Dền';
     
 -- Đưa ra danh sách các ngôi nhà chưa từng được ai thuê
 SELECT 
@@ -74,10 +72,7 @@ WHERE
             c.`houseId` = h.`houseId`);
 
 -- Đưa ra giá thuê cao nhất trong số các giá thuê của các ngôi nhà đã từng ít nhất một lần được thuê.
-SELECT 
-    MAX(`price`)
+SELECT MAX(`price`)
 FROM
-    `contract` AS c,
-    `house` AS h
-WHERE
-    c.`houseId` = h.`houseId`;
+    `contract` AS c
+    INNER JOIN `house` AS h ON h.`houseId` = c.`houseId`

@@ -63,189 +63,112 @@ insert into `supply` values ('06', '04', 400);
 insert into `supply` values ('06', '05', 50);
 
 -- a Đưa ra tên của những hãng có cung ứng ít nhất 1 mặt hàng màu đỏ
-SELECT 
-    sr.`name`
-FROM
-    `supplier` AS sr,
-    `product` AS p,
-    `supply` AS s
-WHERE
-    s.`supplierId` = sr.`supplierId`
-        AND s.`productId` = p.`productId`
-        AND `color` = 'red'
+SELECT sr.`name`
+FROM `supplier` AS sr
+    INNER JOIN `supply` AS s ON s.`supplierId` = sr.`supplierId`
+    INNER JOIN `product` AS p ON p.`productId` = s.`productId`
+WHERE `color` = 'red'
 GROUP BY sr.`name`;
 
 -- b Đưa ra mã số của các hãng có cung ứng ít nhất 1 mặt hàng màu đỏ hoặc 1 mặt hàng màu xanh
-SELECT 
-    sr.`supplierId`
-FROM
-    `supplier` AS sr,
-    `product` AS p,
-    `supply` AS s
-WHERE
-    s.`supplierId` = sr.`supplierId`
-        AND s.`productId` = p.`productId`
-        AND (`color` = 'red' OR `color` = 'green')
+SELECT sr.`supplierId`
+FROM `supplier` AS sr
+    INNER JOIN `supply` AS s ON s.`supplierId` = sr.`supplierId`
+    INNER JOIN `product` AS p ON p.`productId` = sr.`productId`
+WHERE `color` = 'red' 
+        OR `color` = 'green'
 GROUP BY sr.`name`;
 
 -- c Đưa ra mã số của hãng có cung ứng ít nhất 1 mặt hàng màu đỏ và 1 mặt hàng màu xanh
-SELECT DISTINCT
-    `supplierId`
+SELECT DISTINCT `supplierId`
 FROM
-    (SELECT 
-        sr.`supplierId`
-    FROM
-        `supplier` AS sr, `product` AS p, `supply` AS s
-    WHERE
-        s.`supplierId` = sr.`supplierId`
-            AND s.`productId` = p.`productId`
-            AND `color` = 'red') AS T1
+    (SELECT sr.`name`
+	FROM
+		`supplier` AS sr
+		INNER JOIN `supply` AS s ON s.`supplierId` = sr.`supplierId`
+		INNER JOIN `product` AS p ON p.`productId` = s.`productId`
+	WHERE
+		`color` = 'red'
+	GROUP BY sr.`name`) AS T1
 WHERE
-    `supplierId` IN (SELECT 
-            sr.`supplierId`
-        FROM
-            `supplier` AS sr,
-            `product` AS p,
-            `supply` AS s
-        WHERE
-            s.`supplierId` = sr.`supplierId`
-                AND s.`productId` = p.`productId`
-                AND `color` = 'green');
+    `supplierId` IN (SELECT sr.`name`
+					FROM
+						`supplier` AS sr
+						INNER JOIN `supply` AS s ON s.`supplierId` = sr.`supplierId`
+						INNER JOIN `product` AS p ON p.`productId` = s.`productId`
+					WHERE
+						`color` = 'green'
+					GROUP BY sr.`name`);
     
 -- d Đưa ra mã số của hãng cung ứng tất cả các mặt hàng màu đỏ
-SELECT DISTINCT
-    T1.`supplierId`
+SELECT DISTINCT T1.`supplierId`
 FROM
     (SELECT DISTINCT
         s.`supplierId`, p.`productId`
     FROM
         `supply` AS s
-    JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-    JOIN `product` AS p ON s.`productId` = p.`productId`
+		INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+		INNER JOIN `product` AS p ON s.`productId` = p.`productId`
     WHERE
-        `color` = 'red') AS T1,
-    `product` AS p
-WHERE
-    T1.`supplierId` IN (SELECT 
-            T1.`supplierId`
-        FROM
-            (SELECT DISTINCT
-                s.`supplierId`, p.`productId`
-            FROM
-                `supply` AS s
-            JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-            JOIN `product` AS p ON s.`productId` = p.`productId`
-            WHERE
-                `color` = 'red') AS T1
-        GROUP BY T1.`supplierId`
-        HAVING COUNT(*) = (SELECT 
-                COUNT(*)
-            FROM
-                `product`
-            WHERE
-                `color` = 'red'));
+        `color` = 'red') AS T1
+GROUP BY T1.`supplierId`
+HAVING COUNT(*) = (SELECT COUNT(*)
+				FROM `product`
+				WHERE `color` = 'red');
         
 -- e Đưa ra mã số của hãng cung ứng tất cả các mặt hàng màu đỏ và màu xanh
-SELECT DISTINCT
-    T1.`supplierId`
+SELECT DISTINCT T1.`supplierId`
 FROM
-    (SELECT DISTINCT
-        s.`supplierId`, p.`productId`
-    FROM
-        `supply` AS s
-    JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-    JOIN `product` AS p ON s.`productId` = p.`productId`
-    WHERE
-        `color` = 'red' OR `color` = 'green') AS T1,
-    `product` AS p
+    (SELECT DISTINCT T1.`supplierId`
+	FROM
+		(SELECT DISTINCT s.`supplierId`, p.`productId`
+		FROM `supply` AS s
+			INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+			INNER JOIN `product` AS p ON s.`productId` = p.`productId`
+		WHERE `color` = 'red') AS T1
+	GROUP BY T1.`supplierId`
+	HAVING COUNT(*) = (SELECT COUNT(*)
+					FROM `product`
+					WHERE `color` = 'red')) AS T1
 WHERE
-    T1.`supplierId` IN (SELECT 
-            T1.`supplierId`
-        FROM
-            (SELECT DISTINCT
-                s.`supplierId`, p.`productId`
-            FROM
-                `supply` AS s
-            JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-            JOIN `product` AS p ON s.`productId` = p.`productId`
-            WHERE
-                `color` = 'red') AS T2
-        GROUP BY T2.`supplierId`
-        HAVING COUNT(*) = (SELECT 
-                COUNT(*)
-            FROM
-                `product`
-            WHERE
-                `color` = 'red'))
-        AND T1.`supplierId` IN (SELECT 
-            T1.`supplierId`
-        FROM
-            (SELECT DISTINCT
-                s.`supplierId`, p.`productId`
-            FROM
-                `supply` AS s
-            JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-            JOIN `product` AS p ON s.`productId` = p.`productId`
-            WHERE
-                `color` = 'green') AS T3
-        GROUP BY T3.`supplierId`
-        HAVING COUNT(*) = (SELECT 
-                COUNT(*)
-            FROM
-                `product`
-            WHERE
-                `color` = 'green'));
+    T1.`supplierId` IN (SELECT DISTINCT T2.`supplierId`
+						FROM
+							(SELECT DISTINCT s.`supplierId`, p.`productId`
+							FROM `supply` AS s
+								INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+								INNER JOIN `product` AS p ON s.`productId` = p.`productId`
+							WHERE `color` = 'green') AS T2
+						GROUP BY T2.`supplierId`
+						HAVING COUNT(*) = (SELECT COUNT(*)
+										FROM `product`
+										WHERE `color` = 'green'));
                 
 -- f Đưa ra mã số của hãng cung ứng tất cả các mặt hàng màu đỏ hoặc tất cả các mặt hàng màu xanh
-SELECT DISTINCT
-    T1.`supplierId`
-FROM
-    (SELECT DISTINCT
-        s.`supplierId`, p.`productId`
-    FROM
-        `supply` AS s
-    JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-    JOIN `product` AS p ON s.`productId` = p.`productId`
-    WHERE
-        `color` = 'red' OR `color` = 'green') AS T1,
-    `product` AS p
+SELECT DISTINCT `supplierId`
+FROM `supplier`
 WHERE
-    T1.`supplierId` IN (SELECT 
-            T2.`supplierId`
-        FROM
-            (SELECT DISTINCT
-                s.`supplierId`, p.`productId`
-            FROM
-                `supply` AS s
-            JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-            JOIN `product` AS p ON s.`productId` = p.`productId`
-            WHERE
-                `color` = 'red') AS T2
-        GROUP BY T2.`supplierId`
-        HAVING COUNT(*) = (SELECT 
-                COUNT(*)
-            FROM
-                `product`
-            WHERE
-                `color` = 'red'))
-        OR T1.`supplierId` IN (SELECT 
-            T3.`supplierId`
-        FROM
-            (SELECT DISTINCT
-                s.`supplierId`, p.`productId`
-            FROM
-                `supply` AS s
-            JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-            JOIN `product` AS p ON s.`productId` = p.`productId`
-            WHERE
-                `color` = 'green') AS T3
-        GROUP BY T3.`supplierId`
-        HAVING COUNT(*) = (SELECT 
-                COUNT(*)
-            FROM
-                `product`
-            WHERE
-                `color` = 'green'));
+    `supplierId` IN (SELECT DISTINCT T1.`supplierId`
+					FROM
+						(SELECT DISTINCT s.`supplierId`, p.`productId`
+						FROM `supply` AS s
+							INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+							INNER JOIN `product` AS p ON s.`productId` = p.`productId`
+						WHERE `color` = 'red') AS T1
+					GROUP BY T1.`supplierId`
+					HAVING COUNT(*) = (SELECT COUNT(*)
+									FROM `product`
+									WHERE `color` = 'red')) 
+        OR `supplierId` IN (SELECT DISTINCT T2.`supplierId`
+						FROM
+							(SELECT DISTINCT s.`supplierId`, p.`productId`
+							FROM `supply` AS s
+								INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+								INNER JOIN `product` AS p ON s.`productId` = p.`productId`
+							WHERE `color` = 'green') AS T2
+						GROUP BY T2.`supplierId`
+						HAVING COUNT(*) = (SELECT COUNT(*)
+										FROM `product`
+										WHERE `color` = 'green'));
                 
 -- g Đưa ra cặp mã số của hãng cung ứng sao cho hãng cung ứng tương ứng với mã số thứ nhất cung cấp một mặt hàng nào đó với giá cao hơn so với giá mà hãng tương ứng với mã số thứ hai cung cấp cũng mặt hàng đó
 SELECT DISTINCT
@@ -269,38 +192,24 @@ WHERE
         AND s1.`productId` = s2.`productId`;
         
 -- i Đưa ra mã số của mặt hàng đắt nhất được cung cấp bởi hãng Dustin
-SELECT 
-    s.`productId`
-FROM
-    `supply` AS s
-        INNER JOIN
-    `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-WHERE
-    `name` = 'Dustin' 
+SELECT s.`productId`
+FROM `supply` AS s
+	INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+WHERE `name` = 'Dustin' 
     AND `price` = (SELECT MAX(`price`)
-					FROM
-						`supply` AS s
-							INNER JOIN
-						`supplier` AS sr ON s.`supplierId` = sr.`supplierId`
-					WHERE
-						`name` = 'Dustin');
+					FROM `supply` AS s
+						INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+					WHERE `name` = 'Dustin');
 
 -- j Đưa ra mã số của mặt hàng được cung ứng bởi tất cả các hãng mà giá tiền đều nhỏ hơn 200
-SELECT  DISTINCT 
-	T1.`productId`
+SELECT  DISTINCT T1.`productId`
 FROM 
-	(SELECT 
-	s.`productId`, s.`supplierId`
+	(SELECT s.`productId`, COUNT(*) AS cnt, MAX(s.`price`) AS price
 	FROM `supply` AS s
-	INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`) AS T1
-WHERE 
-	(SELECT COUNT(*)
-	FROM `supply` AS s
-	WHERE T1.`productId` = s.`productId`) = 
-		(SELECT count(*) 
-        FROM `supplier`) 
-	AND (SELECT MAX(s.`price`)
-		FROM `supply` AS s
-        WHERE T1.`productId` = s.`productId`
-    ) < 200
+		INNER JOIN `supplier` AS sr ON s.`supplierId` = sr.`supplierId`
+	GROUP BY s.`productId`) AS T1, 
+    (SELECT COUNT(*) AS numberOfSupplier
+    FROM `supplier`) AS T2
+WHERE `price` < 200
+	AND `cnt` = `numberOfSupplier`
 	

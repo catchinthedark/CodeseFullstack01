@@ -64,33 +64,15 @@ CREATE TABLE Lamviec (
  insert into Lamviec values('NV12', 'P08', '2016-02-12');
  
  -- a  Đưa ra tên và tuổi của các nhân viên làm việc cho cả phòng Tổ chức và Kế hoạch
-SELECT DISTINCT
-    nv.`Hoten`, nv.`tuoi`
-FROM
-    `Lamviec` AS lv
-        INNER JOIN
-    `Nhanvien` AS nv ON lv.`MSNV` = nv.`MSNV`
+SELECT DISTINCT `Hoten`, `tuoi`
+FROM (SELECT nv.`msnv`, COUNT(*) AS cnt, nv.`Hoten`, nv.`tuoi`
+	FROM `Lamviec` AS lv
+		INNER JOIN `Nhanvien` AS nv ON lv.`MSNV` = nv.`MSNV`
+        INNER JOIN `Phong` AS p ON lv.`MSP` = p.`MSP`
+	GROUP BY nv.`msnv`
+    HAVING p.`Tenphong` = 'Phongtochuc' OR p.`Tenphong` = 'Phongkehoach') AS T
 WHERE
-    nv.`MSNV` IN (SELECT 
-            nv.`MSNV`
-        FROM
-            `Lamviec` AS lv
-                INNER JOIN
-            `Nhanvien` AS nv ON lv.`MSNV` = nv.`MSNV`
-                INNER JOIN
-            `Phong` AS p ON lv.`MSP` = p.`MSP`
-        WHERE
-            p.`Tenphong` = 'Phongtochuc')
-        AND nv.`MSNV` IN (SELECT 
-            nv.`MSNV`
-        FROM
-            `Lamviec` AS lv
-                INNER JOIN
-            `Nhanvien` AS nv ON lv.`MSNV` = nv.`MSNV`
-                INNER JOIN
-            `Phong` AS p ON lv.`MSP` = p.`MSP`
-        WHERE
-            p.`Tenphong` = 'Phongkehoach');
+	cnt = 2;
             
 -- b Với mỗi phòng với trên 20 nhân viên, hãy đưa ra mã số phong và số nhân viên làm trong phòng đó
 SELECT DISTINCT 
