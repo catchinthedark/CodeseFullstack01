@@ -1,0 +1,2 @@
+::1 - - [15/Aug/2020:13:08:16 +0000] "GET /api/v1/category?limit=5&page=1 HTTP/1.1" 200 846 "-" "PostmanRuntime/7.26.3"
+::1 - - [15/Aug/2020:13:08:22 +0000] "GET /api/v1/category/3 HTTP/1.1" 200 235 "-" "PostmanRuntime/7.26.3"

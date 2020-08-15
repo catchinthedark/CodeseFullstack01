@@ -1,10 +1,11 @@
 const mysql = require('mysql');
+
 const config = {
-    host: 'codedidungso.me',
+    host: process.env.host,
     port: 3306,
-    user: 'root',
-    password: 'Codese2020', //BTVN : try to hide this with .env using dotenv
-    database: 'thachthao'
+    user: process.env.user,
+    password: process.env.password,
+    database: process.env.database
 }
 
 const pool = mysql.createPool(config);

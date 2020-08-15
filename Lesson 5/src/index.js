@@ -1,9 +1,15 @@
 const express = require('express');
+require('dotenv').config();
 const bodyparser = require('body-parser')
 const categoryRoute = require('./routers/category');
+const fs = require('fs');
+const morgan = require('morgan');
 
 const app = express();
 
+const diary = fs.createWriteStream('diary.txt');
+
+app.use(morgan('combined', { stream: diary }));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use('/api/v1/category', categoryRoute);
@@ -14,9 +20,9 @@ app.get('/', (req, res) => {
     res.send('Homepage')
 });
 
-app.listen(9067, err => {
+app.listen(8080, err => {
     if (err) console.log(err);
-    console.log("Listening at port 9067");
+    console.log("Listening at port 8080");
 });
 
 // IP address - localhost / 127.0.0.1
