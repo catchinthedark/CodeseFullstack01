@@ -6,14 +6,13 @@ const fs = require('fs');
 const morgan = require('morgan');
 
 const app = express();
-
 const diary = fs.createWriteStream('diary.txt');
 
 app.use(morgan('combined', { stream: diary }));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use('/api/v1/category', categoryRoute);
-//middle wares
+//middleware
 //log
 
 app.get('/', (req, res) => {
