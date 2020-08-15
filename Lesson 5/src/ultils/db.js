@@ -1,35 +1,43 @@
 const mysql = require('mysql');
-const dbConfig = require('../config/dbConfig');
-const db = 'thachthao'
+const config = {
+    host: 'codedidungso.me',
+    port: 3306,
+    user: 'root',
+    password: 'Codese2020', //BTVN : try to hide this with .env using dotenv
+    database: 'thachthao'
+}
 
-const connection = mysql.createConnection({
-    host: dbConfig.host,
-    user: dbConfig.user,
-    password: dbConfig.password
-})
+const pool = mysql.createPool(config);
 
-connection.connect(error => {
-    if (error) throw error;
-    console.log("Sucessfully connected to the database");
-})
+const query = (sql, params) => {
+    return new Promise((resolve, reject) => {
+        pool.query(sql, params, (err, result) => {
+            if (err) reject(err)
+            else resolve()
+        })
+    })
+}
 
-connection.query('CREATE DATABASE IF NOT EXISTS ??', db, function(err, results) {
-    if (err) {
-        console.log('error in creating database', err);
-        return;
-    }
+const queryOne = (sql, params) => {
+    return new Promise((resolve, reject) => {
+        pool.query(sql, params, (err, result) => {
+            if (err) reject(err)
+            else resolve(result[0])
+        })
+    })
+}
 
-    console.log('created a new database');
+const queryMulti = (sql, params) => {
+    return new Promise((resolve, reject) => {
+        pool.query(sql, params, (err, result) => {
+            if (err) reject(err)
+            else resolve(result)
+        })
+    })
+}
 
-    connection.changeUser({
-        database: db
-    }, function(err) {
-        if (err) {
-            console.log('error in changing database', err);
-            return;
-        }
-    });
-});
-
-
-module.exports = connection;
+module.exports = {
+    query,
+    queryOne,
+    queryMulti
+}

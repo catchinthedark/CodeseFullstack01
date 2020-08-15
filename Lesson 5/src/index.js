@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyparser = require('body-parser')
-const dbUltils = require('./ultils/db');
-const pool = require('./ultils/db')
 const categoryRoute = require('./routers/category');
 
 const app = express();
@@ -18,6 +16,7 @@ app.get('/', (req, res) => {
 
 app.listen(9067, err => {
     if (err) console.log(err);
+    console.log("Listening at port 9067");
 });
 
 // IP address - localhost / 127.0.0.1
