@@ -21,6 +21,7 @@ CREATE TABLE `account` (
   `status` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `isDelete` int DEFAULT 0,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -47,6 +48,7 @@ CREATE TABLE `category` (
   `display` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `description` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `imageUrl` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `isDelete` int DEFAULT 0,
   PRIMARY KEY (`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -83,6 +85,7 @@ CREATE TABLE `product` (
   `categoryId` int DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `isDelete` int DEFAULT 0,
   PRIMARY KEY (`productId`),
   KEY `categoryId` (`categoryId`),
   CONSTRAINT `product_ibfk_1` FOREIGN KEY (`categoryId`) REFERENCES `category` (`categoryId`)
@@ -207,6 +210,7 @@ CREATE TABLE `order` (
   `status` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `isDelete` int DEFAULT 0,
   PRIMARY KEY (`orderId`),
   KEY `productId` (`productId`),
   KEY `username` (`username`),

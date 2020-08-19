@@ -1,22 +1,22 @@
-const category = require('../services/category');
+const product = require('../services/product');
 
 const getAll = async(req, res) => {
     try {
-        const { data, metadata } = await category.getAll(req.pagination);
+        const { data, metadata } = await product.getAll(req.pagination);
         res.send({
             data,
             metadata
-        });
+        })
     } catch (err) {
         console.log(err);
         res.send(err);
     }
-};
+}
 
 const getById = async(req, res) => {
     try {
-        const { data } = await category.getById(parseInt(req.params.id));
-        res.send(data);
+        const { data } = await product.getById(req.params.id);
+        res.send(data)
     } catch (err) {
         console.log(err);
         res.send(err);
@@ -25,8 +25,8 @@ const getById = async(req, res) => {
 
 const create = async(req, res) => {
     try {
-        const { data } = await category.create(req.body);
-        res.send('Category created!');
+        const { data } = await product.create(req.body);
+        res.send('Product created!');
     } catch (err) {
         console.log(err);
         res.send(err);
@@ -35,8 +35,8 @@ const create = async(req, res) => {
 
 const updateById = async(req, res) => {
     try {
-        const { data } = await category.updateById(parseInt(req.params.id), req.body)
-        res.send('Category updated!');
+        const { data } = await product.updateById(req.params.id, req.body);
+        res.send('Product updated!');
     } catch (err) {
         console.log(err);
         res.send(err);
@@ -45,8 +45,8 @@ const updateById = async(req, res) => {
 
 const deleteById = async(req, res) => {
     try {
-        const { data } = await category.deleteById(parseInt(req.params.id));
-        res.send('Category deleted!');
+        const { data } = await product.deleteById(req.params.id);
+        res.send('Product deleted!');
     } catch (err) {
         console.log(err);
         res.send(err);
@@ -58,5 +58,5 @@ module.exports = {
     getById,
     create,
     updateById,
-    deleteById,
+    deleteById
 }

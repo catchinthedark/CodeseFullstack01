@@ -1,19 +1,46 @@
-const express = require('express');
-require('dotenv').config();
-const bodyparser = require('body-parser')
-const categoryRoute = require('./routers/category');
-const fs = require('fs');
-const morgan = require('morgan');
+const dotenv = require('dotenv');
+dotenv.config();
 
+const express = require('express');
 const app = express();
+
+const fs = require('fs');
 const diary = fs.createWriteStream('diary.txt');
 
-app.use(morgan('combined', { stream: diary }));
+//middleware
+const bodyparser = require('body-parser');
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
+const morgan = require('morgan');
+app.use(morgan('combined', { stream: diary }));
+const pagination = require('./middlewares/pagination');
+app.use(pagination);
+
+//routers
+const paramsRoute = require('./routers/params');
+app.use('/api/v1/params', paramsRoute);
+
+const categoryRoute = require('./routers/category');
 app.use('/api/v1/category', categoryRoute);
-//middleware
-//log
+
+const productRoute = require('./routers/product');
+app.use('/api/v1/product', productRoute);
+
+const accountRoute = require('./routers/account');
+app.use('/api/v1/account', accountRoute);
+
+const orderRoute = require('./routers/order');
+app.use('/api/v1/order', orderRoute);
+
+app.use((req, res, next) => {
+    console.log(req.pagination);
+    next();
+})
+
+const middleWare = (req, res, next) => {
+    console.log(Date());
+    next();
+}
 
 app.get('/', (req, res) => {
     res.send('Homepage')
