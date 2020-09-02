@@ -1,79 +1,113 @@
-import React, { useState } from 'react';
-import { TextField, Typography, Button, Paper } from '@material-ui/core';
-//const React = require('react');
+import React, {Suspense, useState} from 'react';
+import clsx from 'clsx';
+import { Collapse } from 'react-collapse';
+import { IconButton, Typography, Button, Paper, Card, CardContent, CardActions, Divider } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'; 
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import axios from 'axios';
 
-function HomePage(props) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleChangeUsername = (event) => {
-        setUsername(event.target.value);
-    }
-    const handleChangePassword = (event) => {
-        setPassword(event.target.value);
-    }
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') handelLogin();
-    }
-    const handelLogin = () => {
-        console.log(username, password);
-        if (password.length < 6) alert('Weak password!!!')
-    }
-    const handelSignUp = () => {
-        console.log('This is prop params1: ', props.params1);
-        console.log('This is prop params2: ', props.params2);
-        props.params2();
-        props.setVersion(props.version+1);
-    }
-    const handelForgotPassword = () => {
-
+class HomePage extends React.Component{
+    constructor(props) {
+        super(props)
+        this.state = {
+            listProducts: [],
+            total: 0,
+            page: 1,
+            size: 3,
+            cardId: null,
+            expanded: false
+        }
     }
 
-    const buttonStyle = {
-        color: '#000000',
-        backgroundColor: '#ffcdd2',
-        width: 200,
-        height: 50
+    async componentDidMount() {
+        try {
+            const res = await axios.get('http://localhost:8080/api/v1/product', {params: {page: this.state.page, size: this.state.size}});
+            this.setState({
+                listProducts: res.data.data,
+                total: res.data.metadata.total
+            })
+        } catch (err) {
+            console.log(err);
+        }
     }
-    //flex react js - play flexbox froggy
-    return <Paper style={{display:'flex', 
-                flexDirection:'column', 
-                justifyContent: 'flex-start', 
-                margin:10,
-                padding:10,
-                flex:1,
-                alignItems:'center',
-                backgroundColor:'#e8eaf6'}}>
-        <TextField 
-            label="username" 
-            type="text" 
-            onChange={handleChangeUsername} 
-            onKeyPress={handleKeyPress}
-        ></TextField><br></br>
-        <TextField 
-            label="password" 
-            type="password" 
-            onChange={handleChangePassword} 
-            onKeyPress={handleKeyPress}
-        /><br></br> 
-        <Button 
-            onClick={handelLogin} 
-            variant="contained" 
-            style={buttonStyle}>
-            <Typography>Login</Typography>
-        </Button><br></br>
-        <Button 
-            onClick={handelSignUp} 
-            variant="contained" 
-            style={buttonStyle}>
-            <Typography>Sign up</Typography>
-        </Button><br></br>
-        <Button 
-            onClick={handelForgotPassword} 
-            variant="contained" style={buttonStyle}>
-            <Typography>Forgot password?</Typography>
-        </Button>
-    </Paper>
+
+    prevPage = async() => {
+        const page = this.state.page === 1 ? 1 : this.state.page - 1;
+        try {
+            const res = await axios.get('http://localhost:8080/api/v1/product', {params: {page: page, size: this.state.size}});
+            this.setState({
+                ...this.state,
+                listProducts: res.data.data,
+                page: page
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    nextPage = async() => {
+        const page = this.state.page === Math.ceil(this.state.total/this.state.size) ? Math.ceil(this.state.total/this.state.size) : this.state.page + 1;
+        try {
+            const res = await axios.get('http://localhost:8080/api/v1/product', {params: {page: page, size: this.state.size}});
+            this.setState({
+                ...this.state,
+                listProducts: res.data.data,
+                page: page
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    handleExpandClick = (productId) => {
+        this.setState({
+            ...this.state,
+            cardId: productId,
+            expanded: !this.state.expanded
+        })
+    };
+
+    productCard = (product) => {
+        return (
+        <Card variant="outlined" style={{flexDirection: 'column', justifyContent: 'center', width: 330}}>
+        <CardContent>
+            <Suspense> <img src={product.imageUrl} style={{width:300, height:180}}/> </Suspense> <br></br>
+            <Typography style={{color: "#7986cb"}}>{product.display}</Typography> <br></br>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Typography>Price: {product.priceOut}</Typography> 
+                <Typography>Sale: {product.priceSale}</Typography>   
+            </div> <br></br>
+        </CardContent>
+        <CardActions disableSpacing>
+            <Button onClick={()=>{this.handleExpandClick(product.productId)}} variant="contained" style={{backgroundColor: "#c5cae9"}} endIcon={<ExpandMoreIcon style={{color: "#000000"}}/>}>detail</Button>
+        </CardActions>
+        <Collapse isOpened={this.state.expanded && this.state.cardId===product.productId} timeout="auto" unmountOnExit>
+            <CardContent>
+                <Typography style={{color: "#7986cb"}}>{product.description}</Typography>
+                <Typography>Provider: {product.provider}</Typography>
+                <Typography>Instock: {product.instock}</Typography>
+                <Typography>Status: {product.status}</Typography>
+            </CardContent>
+        </Collapse>
+        </Card> );
+}
+
+    render() {
+        return <div>
+            <paper style={{display: 'flex', flexDirection: 'row', flexFlow: 'wrap', justifyContent: 'space-between', margin: 10, height:580}}>
+            {
+                this.state.listProducts.map((product) => this.productCard(product))
+            } </paper>
+            <br></br>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
+                <Button onClick={this.prevPage} variant="contained" style={{backgroundColor: "#c5cae9"}} startIcon={<NavigateBeforeIcon style={{color: "#000000"}}/>}>prev</Button>
+                <Button variant="contained" style={{backgroundColor: "#c5cae9", color: "#000000"}} disabled>PAGING: {this.state.page} - {Math.ceil(this.state.total/this.state.size)}</Button>
+                <Button onClick={this.nextPage} variant="contained" style={{backgroundColor: "#c5cae9"}} endIcon={<NavigateNextIcon style={{color: "#000000"}}/>}>next</Button>
+            </div>
+        </div>
+    }
 }
 
 export default HomePage;

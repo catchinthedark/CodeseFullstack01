@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+const cors = require('cors');
+
 const express = require('express');
 const app = express();
 
@@ -17,6 +19,7 @@ const pagination = require('./middlewares/pagination');
 app.use(pagination);
 const { errorHandle } = require('./middlewares/errorHandle');
 app.use(errorHandle);
+app.use(cors());
 
 //routers
 const paramsRoute = require('./routers/params');
@@ -43,10 +46,6 @@ const middleWare = (req, res, next) => {
     console.log(Date());
     next();
 }
-
-app.get('/', (req, res) => {
-    res.send('Homepage')
-});
 
 app.get('/api/v1/test-err', (req, res, next) => {
     next('Found an error!')
