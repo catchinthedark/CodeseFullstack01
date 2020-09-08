@@ -12,7 +12,7 @@ const getAll = async({ limit, offset }) => {
                     WHERE isDelete = 0;`;
     const params = [limit, offset];
     const data = await db.queryMulti(sql, params);
-    const total = await db.queryOne(countSql);
+    const { total } = await db.queryOne(countSql);
     return {
         data,
         metadata: {
