@@ -5,6 +5,11 @@
 /.pnp
 .pnp.js
 
+#devDependencies
+.eslintrc.js
+.prettierrc
+setting.json
+
 # testing
 /coverage
 

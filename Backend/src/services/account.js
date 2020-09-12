@@ -1,4 +1,5 @@
 const db = require('../utils/db');
+const security = require('../utils/security');
 
 const getAll = async({ limit, offset }) => {
     const sql = `SELECT username, password, role, display, email, phone, address, birthday, avatar, status, created_at, updated_at
@@ -33,11 +34,19 @@ const getById = async(username) => {
     };
 }
 
-const create = async({ username, password, role, display, email, phone, address, birthday, avatar, status }) => {
-    const sql = `INSERT INTO account(username, password, role, display, email, phone, address, birthday, avatar, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-    const params = [username, password, role, display, email, phone, address, birthday, avatar, status];
-    const data = await db.query(sql, params);
+const create = async(newAccount) => {
+    const checkExistSql = `SELECT COUNT(username) AS cnt
+                        FROM account
+                        WHERE username = ?;`;
+    const checkExist = await db.queryOne(checkExistSql, [newAccount.username]);
+    if (checkExist.cnt > 0) {
+        return "Account existed!"
+    }
+    const encryptedPassword = await security.generatePassword(newAccount.password);
+    const sql = `INSERT INTO account(username, password)
+                VALUES (?, ?);`;
+    await db.query(sql, [newAccount.username, newAccount.password]);
+    return "Account created!";
 }
 
 const updateById = async(username, { password, role, display, email, phone, address, birthday, avatar, status }) => {

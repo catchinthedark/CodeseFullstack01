@@ -8,9 +8,8 @@ import CategoryPage from './views/Category';
 
 function App(props) {
     return <BrowserRouter>
-    <div style={{margin: 10, padding: 10}}>
-        <Grid container justify="flex-start" alignItems="flex-start">
-            <Grid item container direction="row" justify="space-evenly" alignItems="center">
+    <div style={{display: 'flex', flexDirection: 'row', margin: 10, padding: 10}}>
+        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
                 <Link to="/">
                     <Button>Home Page</Button>
                 </Link>    
@@ -20,26 +19,25 @@ function App(props) {
                 <Link to="/category">
                     <Button>Category Page</Button>
                 </Link>    
-            </Grid>
-            <Switch>
-                <Route
-                    component={HomePage}
-                    exact path="/"
-                />
-                <Route
-                    component={Login}
-                    exact path="/login"
-                />
-                <Route
-                    component={CategoryPage}
-                    exact path="/category"
-                />
-                <Route
-                    component={NotFound}
-                    path="/"
-                />
-            </Switch>
-        </Grid>
+        </div>
+                <Switch>
+                    <Route
+                        component={HomePage}
+                        exact path="/"
+                    />
+                    <Route
+                        component={Login}
+                        exact path="/login"
+                    />
+                    <Route
+                        component={CategoryPage}
+                        exact path="/category"
+                    />
+                    <Route
+                        component={NotFound}
+                        path="/"
+                    />
+                </Switch>
     </div>
     </BrowserRouter>
 }

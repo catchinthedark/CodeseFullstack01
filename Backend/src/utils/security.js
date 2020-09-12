@@ -8,9 +8,7 @@ const SALT_ROUND = 10;
 const keyLength = 24;
 const algorithm = 'aes-192-cbc';
 const pwd = 'Password I use to generate 1-direction encryption key';
-const key = crypto.scrypt(pwd, SALT, keyLength, { N: SALT_ROUND }, (err, derivedKey) => {
-    if (err) throw (err);
-});
+const key = crypto.scryptSync(pwd, 'salt', 24);
 const iv = crypto.randomBytes(16);
 
 //1. Encrypt 1 direction
