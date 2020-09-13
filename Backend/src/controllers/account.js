@@ -19,30 +19,28 @@ const create = async(req, res, next) => {
         password: req.body.password,
     }
     if (!newAccount.username || !newAccount.password) {
-        res.send({
+        res.status(400).send({
             status: 0,
             message: 'Username or password is empty!'
         })
     }
     if (newAccount.password.length < 6) {
-        const result = {
+        res.status(400).send({
             status: 0,
             message: 'Password must have more than 6 digits!'
-        }
-        return result;
+        })
     }
     const data = await account.create(newAccount);
     if (data === "Account existed!") {
-        const result = {
+        res.status(400).send({
             status: 0,
             message: 'Account existed!'
-        }
+        })
     }
-    const result = {
+    res.status(400).send({
         status: 1,
         message: 'Account created!'
-    }
-    return result;
+    })
 }
 
 const updateById = async(req, res) => {

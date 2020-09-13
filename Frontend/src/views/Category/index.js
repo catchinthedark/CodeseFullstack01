@@ -12,7 +12,7 @@ class CategoryPage extends React.Component{
         this.state = {
             listCategories: [],
             page: 1,
-            size: 5,
+            size: 6,
             total: 0
         }
     }
@@ -60,14 +60,14 @@ class CategoryPage extends React.Component{
             <Grid item container spacing={1}>
             {
                 this.state.listCategories.map((category) => 
-                <Grid container item xs={6}>
+                <Grid container item xs={4}>
                     <Category category={category}></Category>
                 </Grid>)
             } </Grid>
             <Grid item container direction="row" justify="space-evenly" alignItems="center">
-                <Button onClick={this.prevPage} variant="contained" style={{backgroundColor: "#c5cae9"}} startIcon={<NavigateBeforeIcon style={{color: "#000000"}}/>}>prev</Button>    
+                <Button onClick={this.prevPage} variant="contained" style={{backgroundColor: "#7986cb"}} startIcon={<NavigateBeforeIcon style={{color: "#000000"}}/>}>prev</Button>    
                 <Typography variant="subtitle1" style={{color: "#49599a"}}>PAGING: {this.state.page} - {Math.ceil(this.state.total/this.state.size)}</Typography>    
-                <Button onClick={this.nextPage} variant="contained" style={{backgroundColor: "#c5cae9"}} endIcon={<NavigateNextIcon style={{color: "#000000"}}/>}>next</Button>
+                <Button onClick={this.nextPage} variant="contained" style={{backgroundColor: "#7986cb"}} endIcon={<NavigateNextIcon style={{color: "#000000"}}/>}>next</Button>
             </Grid>
         </Grid>
     }

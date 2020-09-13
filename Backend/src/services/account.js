@@ -40,12 +40,12 @@ const create = async(newAccount) => {
                         WHERE username = ?;`;
     const checkExist = await db.queryOne(checkExistSql, [newAccount.username]);
     if (checkExist.cnt > 0) {
-        return "Account existed!"
+        return "Account existed!";
     }
     const encryptedPassword = await security.generatePassword(newAccount.password);
     const sql = `INSERT INTO account(username, password)
                 VALUES (?, ?);`;
-    await db.query(sql, [newAccount.username, newAccount.password]);
+    await db.query(sql, [newAccount.username, encryptedPassword]);
     return "Account created!";
 }
 

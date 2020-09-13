@@ -37,6 +37,9 @@ app.use('/api/v1/account', accountRoute);
 const orderRoute = require('./routers/order');
 app.use('/api/v1/order', orderRoute);
 
+const loginRoute = require('./routers/auth');
+app.use('/api/v1/auth', loginRoute);
+
 app.use((req, res, next) => {
     console.log(req.pagination);
     next();

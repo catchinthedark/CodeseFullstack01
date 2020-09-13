@@ -9,7 +9,7 @@ const login = async(req, res, next) => {
     if (result) {
         res.send({
             status: 1,
-            message: 'Login successfully!'
+            token: result
         })
     } else {
         res.status(400).send({
