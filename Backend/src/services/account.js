@@ -34,19 +34,29 @@ const getById = async(username) => {
     };
 }
 
-const create = async(newAccount) => {
-    const checkExistSql = `SELECT COUNT(username) AS cnt
+const checkExist = async(username) => {
+    const sql = `SELECT COUNT(username) AS cnt
                         FROM account
                         WHERE username = ?;`;
-    const checkExist = await db.queryOne(checkExistSql, [newAccount.username]);
-    if (checkExist.cnt > 0) {
-        return "Account existed!";
+    const result = await db.queryOne(sql, username);
+    if (result.cnt > 0) {
+        return {
+            status: 0,
+            message: "Account existed!"
+        }
     }
+}
+
+const create = async(newAccount) => {
     const encryptedPassword = await security.generatePassword(newAccount.password);
-    const sql = `INSERT INTO account(username, password)
-                VALUES (?, ?);`;
-    await db.query(sql, [newAccount.username, encryptedPassword]);
-    return "Account created!";
+    const sql = `INSERT INTO account(username, password, role, display, email, phone, address, birthday, avatar)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+    const params = [newAccount.username, encryptedPassword, newAccount.role, newAccount.display, newAccount.email, newAccount.phone, newAccount.address, newAccount.birthdaynew, Account.avatar];
+    await db.query(sql, params);
+    return {
+        status: 1,
+        message: "Account created!"
+    };
 }
 
 const updateById = async(username, { password, role, display, email, phone, address, birthday, avatar, status }) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Typography, Toolbar, AppBar, BottomNavigation } from '@material-ui/core';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import API from '../../api';
@@ -56,19 +56,21 @@ class HomePage extends React.Component{
     }
 
     render() {
-        return <Grid container direction="column" spacing={3} margin={10} padding={10}>
-            <Grid item container spacing={2} justify="space-evenly">
-            {
-                this.state.listProducts.map((product) => 
-                <Grid container item xs={4}>
-                    <Product product={product}></Product>
-                </Grid>)
-            } </Grid>
-            <Grid item container direction="row" justify="space-evenly" alignItems="center">
+        return <Grid container direction="column" spacing={3} padding={30}>
+            <div style={{backgroundImage: 'url(https://images.freeimages.com/images/large-previews/022/pink-sky-1553614.jpg)'}}>
+                <Grid item container spacing={4} justify="space-evenly" style={{padding: 50}}>
+                {
+                    this.state.listProducts.map((product) => 
+                    <Grid container item xs={4}>
+                        <Product product={product}></Product>
+                    </Grid>)
+                } </Grid>
+            </div>
+            <Grid item container direction="row" justify="space-evenly" alignItems="center" style={{margin: 10}}>
                 <Button onClick={this.prevPage} variant="contained" style={{backgroundColor: "#7986cb", color: "#ffffff"}} startIcon={<NavigateBeforeIcon style={{color: "#ffffff"}}/>}>prev</Button>    
                 <Typography variant="subtitle1" style={{color: "#49599a"}}>PAGING: {this.state.page} - {Math.ceil(this.state.total/this.state.size)}</Typography>    
                 <Button onClick={this.nextPage} variant="contained" style={{backgroundColor: "#7986cb", color: "#ffffff"}} endIcon={<NavigateNextIcon style={{color: "#ffffff"}}/>}>next</Button>
-            </Grid>
+           </Grid>
         </Grid>
     }
 }

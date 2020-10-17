@@ -34,6 +34,18 @@ const getById = async(orderId) => {
     };
 }
 
+const getByUsername = async(username) => {
+    const sql = `SELECT orderId, productId, price, amount, note, status, created_at, updated_at
+                FROM ${o}
+                WHERE username = ?
+                    AND isDelete = 0
+                LIMIT 1;`;
+    const data = await db.queryMulti(sql, username);
+    return {
+        data
+    };
+}
+
 const create = async({ username, productId, price, amount, note, status }) => {
     const sql = `INSERT INTO ${o}(orderId, username, productId, price, amount, note, status)
                 VALUES (uuid(), ?, ?, ?, ?, ?, ?);`;
@@ -73,6 +85,7 @@ const listOrder = async() => {
 module.exports = {
     getAll,
     getById,
+    getByUsername,
     create,
     updateById,
     deleteById,

@@ -13,6 +13,11 @@ const getById = async(req, res) => {
     res.send(data);
 }
 
+const getByUsername = async(req, res) => {
+    const { data } = await order.getByUsername(req.params.username);
+    res.send(data);
+}
+
 const create = async(req, res) => {
     const { data } = await order.create(req.body);
     res.send('Order created!');
@@ -31,6 +36,7 @@ const deleteById = async(req, res) => {
 module.exports = {
     getAll,
     getById,
+    getByUsername,
     create,
     updateById,
     deleteById

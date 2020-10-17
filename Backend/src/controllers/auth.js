@@ -1,4 +1,5 @@
 const auth = require('../services/auth');
+const account = require('../services/account');
 
 const login = async(req, res, next) => {
     const account = {
@@ -12,13 +13,19 @@ const login = async(req, res, next) => {
             token: result
         })
     } else {
-        res.status(400).send({
+        res.send({
             status: 0,
-            message: 'Username or password incorrect!'
-        })
+            message: 'Login failed'
+        });
     }
 }
 
+const getMe = async(req, res, next) => {
+    const account = await auth.getMe(req.username);
+    res.send(account);
+}
+
 module.exports = {
-    login
+    login,
+    getMe
 }

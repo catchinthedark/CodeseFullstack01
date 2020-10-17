@@ -31,7 +31,7 @@ const create = async(req, res, next) => {
         })
     }
     const data = await account.create(newAccount);
-    if (data === "Account existed!") {
+    if (data.status === 0) {
         res.status(400).send({
             status: 0,
             message: 'Account existed!'

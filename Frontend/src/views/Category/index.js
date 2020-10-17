@@ -57,13 +57,15 @@ class CategoryPage extends React.Component{
 
     render() {
         return <Grid container direction="column" spacing={3}>
-            <Grid item container spacing={1}>
-            {
-                this.state.listCategories.map((category) => 
-                <Grid container item xs={4}>
-                    <Category category={category}></Category>
-                </Grid>)
-            } </Grid>
+            <div style={{backgroundImage: 'url(https://images.freeimages.com/images/large-previews/031/sky-with-red-clouds-3-1635514.jpg)'}}>
+                <Grid item container spacing={4} justify="space-evenly" style={{padding: 50}}>
+                {
+                    this.state.listCategories.map((category) => 
+                    <Grid container item xs={4}>
+                        <Category category={category}></Category>
+                    </Grid>)
+                } </Grid>
+            </div>
             <Grid item container direction="row" justify="space-evenly" alignItems="center">
                 <Button onClick={this.prevPage} variant="contained" style={{backgroundColor: "#7986cb"}} startIcon={<NavigateBeforeIcon style={{color: "#000000"}}/>}>prev</Button>    
                 <Typography variant="subtitle1" style={{color: "#49599a"}}>PAGING: {this.state.page} - {Math.ceil(this.state.total/this.state.size)}</Typography>    

@@ -2,7 +2,7 @@ import API from './api';
 
 export const getAllCategory = async(params) => {
     try {
-        const res = await API.get('/category', {params});  
+        const res = await API.get('/category', { params });
         return {
             data: res.data,
             status: true
@@ -13,12 +13,11 @@ export const getAllCategory = async(params) => {
             status: false
         };
     }
-    
 }
 
 export const getCategoryById = async(id) => {
     try {
-        const res = await API.get(`/category/${id}`);  
+        const res = await API.get(`/category/${id}`);
         return {
             data: res.data,
             status: true
@@ -29,5 +28,4 @@ export const getCategoryById = async(id) => {
             status: false
         };
     }
-    
 }

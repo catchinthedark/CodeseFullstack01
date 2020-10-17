@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Button, Toolbar, Divider, IconButton, ButtonBase, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Grid, AppBar, Button, Toolbar, Divider, IconButton, ButtonBase, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import HomeIcon from '@material-ui/icons/Home';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 
-export default class Appbar extends Component {
+export default class NormalLayout extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -30,8 +30,8 @@ export default class Appbar extends Component {
 
     render() {
       return (
-        <div style={{flexGrow: 1}}>
-        <AppBar position="static">
+      <Grid container item>
+        <AppBar position="static" style={{boxShadow: "none"}}>
           <Toolbar style={{backgroundColor: "#9fa8da"}}>
             <IconButton
               edge="start"
@@ -67,7 +67,7 @@ export default class Appbar extends Component {
           <List>
             <ListItem button component={Link} to="/">
               <ListItemIcon> <HomeIcon style={{color: "#ffa4a2"}} /> </ListItemIcon>
-              <ListItemText primary={'HOMEPAGE'} />
+              <ListItemText primary={'HOME'} />
             </ListItem>
             <ListItem button component={Link} to="/category">
               <ListItemIcon> <DashboardIcon style={{color: "#ffa4a2"}} /> </ListItemIcon>
@@ -75,6 +75,7 @@ export default class Appbar extends Component {
             </ListItem>
           </List>
         </Drawer>
-        </div>);
+      </Grid>
+      )
   }
 }
