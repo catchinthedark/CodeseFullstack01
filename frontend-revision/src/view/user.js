@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Paper } from '@material-ui/core';
 
 
-export default class UserPage extends React.Component {
+export default class User extends React.Component {
     constructor(props) {
         super(props)
     }

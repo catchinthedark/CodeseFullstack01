@@ -9,6 +9,7 @@ import NotFound from './views/NotFound';
 import CategoryPage from './views/Category';
 import NormalLayout from './layout/Normal';
 import UserLayout from './layout/User';
+import Params from './views/Params';
 
 class App extends Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class App extends Component {
                     component: SignUp,
                     layout: NormalLayout,
                     path: '/sign-up',
-                }
+                },
             ]
         }
     }
@@ -43,24 +44,18 @@ class App extends Component {
             <Switch>
                 {
                     this.state.routers.map(e => (
-                        <Grid container direction="column" spacing={2}>
-                            <Grid item>
-                                <e.layout />
-                            </Grid>
-                            <Grid item>
-                                <Route
-                                    component={e.component}
-                                    exact path={e.path}
-                                />
-                            </Grid>    
-                        </Grid>
+                        <Route exact path={e.path} >
+                        <e.layout>
+                            <e.component></e.component>
+                        </e.layout>
+                        </Route>
                     ))
                 }
                 <Route
-                    component={NotFound}
-                    path='/not-found'
+                    component={Params}
+                    path='/:param'
                 />
-                <Redirect from='/' to='/not-found'></Redirect>
+                <Redirect from='/' to='/:param'></Redirect>
             </Switch>
         </BrowserRouter>
     }
