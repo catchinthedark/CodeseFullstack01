@@ -10,6 +10,7 @@ import CategoryPage from './views/Category';
 import NormalLayout from './layout/Normal';
 import UserLayout from './layout/User';
 import Params from './views/Params';
+import Product from './views/HomePage/product';
 
 class App extends Component {
     constructor(props) {
@@ -39,15 +40,15 @@ class App extends Component {
             ]
         }
     }
-    render () {
+    render() {
         return <BrowserRouter>
             <Switch>
                 {
                     this.state.routers.map(e => (
                         <Route exact path={e.path} >
-                        <e.layout>
-                            <e.component></e.component>
-                        </e.layout>
+                            <e.layout>
+                                <e.component></e.component>
+                            </e.layout>
                         </Route>
                     ))
                 }
@@ -55,9 +56,23 @@ class App extends Component {
                     component={Params}
                     path='/:param'
                 />
+                
+                
                 <Redirect from='/' to='/:param'></Redirect>
             </Switch>
         </BrowserRouter>
     }
 }
 export default App;
+
+
+
+const style = {
+    height: '57%',
+    width: '47%',
+
+}
+
+
+// localhost:/product
+// localhost:/product/:id

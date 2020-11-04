@@ -13,7 +13,7 @@ class HomePage extends React.Component{
             listProducts: [],
             total: 0,
             page: 1,
-            size: 6,
+            size: 6
         }
     }
 
