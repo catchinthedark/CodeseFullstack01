@@ -10,7 +10,13 @@ const getById = async(req, res) => {
     res.send(data);
 }
 
+const add = async(req, res) => {
+    const { data } = await Class.add(req.body);
+    res.send('Class added!');
+}
+
 module.exports = {
     getAll,
-    getById
+    getById,
+    add
 }

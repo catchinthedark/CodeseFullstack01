@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import API from '../../api';
 import { Grid, ButtonBase, Typography } from '@material-ui/core';
 import { withSnackbar } from 'notistack';
@@ -26,7 +25,7 @@ class Home extends Component {
 
     render() {
         return (
-            <Grid container spacing={5} direction="column">
+            <Grid container spacing={5} direction="column" style={{marginLeft: 20}}>
                 {this.state.listClass.map((cl) => {
                     return <Grid item>
                         <ButtonBase

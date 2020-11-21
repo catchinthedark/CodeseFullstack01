@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import API from '../../api';
+import { Grid, ButtonBase, Typography } from '@material-ui/core';
 import { withSnackbar } from 'notistack';
-import { Typography, Grid, ButtonBase } from '@material-ui/core';
 
-class Class extends Component {
+class AllStudent extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            listStudents: []
+            listStudent: []
         }
     }
 
     async componentDidMount() {
-        const { match: { params } } = this.props;
-        console.log(params.id);
-        const res = await API.classAPI.getById(params.id);
+        const res = await API.studentAPI.getAll();
         if (res.status) {
             this.setState({
-                listStudents: res.data
+                listStudent: res.data
             })
         } else {
             this.props.enqueueSnackbar(res.message);
@@ -27,11 +25,11 @@ class Class extends Component {
     render() {
         return (
             <Grid container spacing={5} direction="column" style={{marginLeft: 20}}>
-                {this.state.listStudents.map((st) => 
-                    <Grid item>
+                {this.state.listStudent.map((st) => {
+                    return <Grid item>
                         <ButtonBase
                             onClick={() => {
-                                this.props.history.push(`/student/${st.studentId}`);
+                                this.props.history.push(`/student/${st.id}`)
                             }}
                         >
                             <Typography>
@@ -39,10 +37,10 @@ class Class extends Component {
                             </Typography>
                         </ButtonBase>
                     </Grid>
-                )}
+                })}
             </Grid>
         )
     }
 }
 
-export default withSnackbar(Class);
+export default withSnackbar(AllStudent);

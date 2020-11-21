@@ -1,4 +1,5 @@
 const db = require('../utils/db');
+const { v1: uuidv1 } = require('uuid');
 
 const getAll = async() => {
     const sql = `SELECT id, className 
@@ -10,8 +11,8 @@ const getAll = async() => {
 }
 
 const getById = async(classId) => {
-    const sql = `SELECT id, fullName
-                FROM student
+    const sql = `SELECT studentId, fullName
+                FROM stInClass
                 WHERE classId = ?;`;
     const data = await db.queryMulti(sql, classId);
     return {
@@ -19,7 +20,18 @@ const getById = async(classId) => {
     };
 }
 
+const add = async({ className }) => {
+    const sql = `INSERT INTO class(id, className)
+                VALUES (?, ?);`;
+    const params = [uuidv1(), className];
+    const data = await db.query(sql, params);
+    return {
+        data
+    };
+}
+
 module.exports = {
     getAll,
-    getById
+    getById,
+    add
 }

@@ -28,7 +28,7 @@ class Student extends Component {
 
     render() {
         return (
-            <Grid container spacing={5} direction="column">
+            <Grid container spacing={5} direction="column" style={{marginLeft: 20}}>
             <Grid item>
                 <Typography> 
                     {this.state.student.fullName} 

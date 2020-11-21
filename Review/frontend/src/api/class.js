@@ -8,7 +8,6 @@ export const getAll = async() => {
             status: true
         }
     } catch (err) {
-        console.log(err);
         return {
             message: 'Cannot get data',
             status: false
@@ -24,10 +23,23 @@ export const getById = async(id) => {
             status: true
         }
     } catch (err) {
-        console.log(err);
         return {
             message: 'Cannot get data',
             status: false
         }        
+    }
+}
+
+export const add = async(newClass) => {
+    try {
+        const res = await API.post(`/class`, newClass);
+        return {
+            status: true
+        }
+    } catch (err) {
+        return {
+            message: 'Adding class failed',
+            status: false
+        }
     }
 }
